@@ -1,4 +1,5 @@
 ﻿namespace BettyBettingApp;
+
 public class Wallet : IWallet
 {
     public decimal Balance { get; private set; }

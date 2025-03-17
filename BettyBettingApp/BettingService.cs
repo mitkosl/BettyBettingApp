@@ -1,14 +1,15 @@
 ﻿namespace BettyBettingApp;
+
 public class BettingService : IBettingService
 {
     private readonly IWallet wallet;
     private readonly IMessageHandler messageHandler;
-    private readonly Random random;
-    public BettingService(IMessageHandler messageHandler, IWallet wallet)
+    private readonly IRandomProvider randomProvider;
+    public BettingService(IMessageHandler messageHandler, IWallet wallet, IRandomProvider randomProvider)
     {
         this.wallet = wallet;
         this.messageHandler = messageHandler;
-        random = new Random();
+        this.randomProvider = randomProvider;
     }
     public decimal PlaceBet(decimal betAmount)
     {
@@ -22,8 +23,7 @@ public class BettingService : IBettingService
             messageHandler.Write("Insufficient balance to place this bet.");
             return 0;
         }
-
-        int outcome = random.Next(1, 101);
+        int outcome = randomProvider.Next(1, 101); // Use the injected random provider
         decimal winAmount = 0;
         if (outcome <= 50)
         {
@@ -31,7 +31,7 @@ public class BettingService : IBettingService
             wallet.Withdraw(betAmount);
             messageHandler.Write($"No luck this time! {wallet.GetBalanceMessage()}");
         }
-        else if (outcome >50 && outcome <= 90)
+        else if (outcome > 50 && outcome <= 90)
         {
             // 40% of the bets win up to x2 the bet amount
             winAmount = betAmount * 2;
@@ -41,7 +41,7 @@ public class BettingService : IBettingService
         else
         {
             // 10% of the bets win between x2 and x10 the bet amount
-            winAmount = betAmount * new Random().Next(2, 11);
+            winAmount = betAmount * randomProvider.Next(2, 11);
             wallet.Deposit(winAmount - betAmount);
             messageHandler.Write($"Jackpot - you won ${winAmount:f2}. {wallet.GetBalanceMessage()}");
         }

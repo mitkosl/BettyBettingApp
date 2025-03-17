@@ -1,4 +1,5 @@
 ﻿namespace BettyBettingApp;
+
 public interface IWallet
 {
     decimal Balance { get; }
