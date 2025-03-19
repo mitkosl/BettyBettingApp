@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betty's Betting App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .bet-section {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+
+            .bet-section h2 {
+                margin-top: 0;
+            }
+
+            .bet-section input {
+                padding: 10px;
+                width: 30%; /* Set width to 30% for the bet input field */
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .bet-section button {
+                width: 30%; /* Set width to 30% for the bet button */
+                padding: 10px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .bet-section button:hover {
+                    background-color: #45a049;
+                }
+
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: 20px;
+            flex: 0 0 200px; /* Fixed width for the info section */
+        }
+
+            .info-section h2 {
+                margin: 0;
+            }
+
+            .info-section input {
+                padding: 10px;
+                width: 100%;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .info-section button {
+                width: 100%;
+                padding: 10px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-bottom: 10px; /* Add margin for spacing */
+            }
+
+                .info-section button:hover {
+                    background-color: #0056b3;
+                }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .balance-message {
+            margin-top: 10px; /* Add some space above the balance message */
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Betty's Betting App</h1>
+    <div class="balance-message" id="balanceMessage"></div> <!-- Current balance displayed here -->
+    <div class="container">
+        <div class="bet-section">
+            <h2>Place Your Bet</h2>
+            <input type="number" id="betAmount" placeholder="Bet Amount (1-10)" />
+            <button onclick="placeBet()">Bet</button>
+            <div class="message" id="betMessage"></div>
+
+        </div>
+        <div class="info-section">
+            <h2>Account Actions</h2>
+            <input type="number" id="depositAmount" placeholder="Deposit Amount" />
+            <button onclick="deposit()">Deposit</button>
+            <input type="number" id="withdrawAmount" placeholder="Withdraw Amount" />
+            <button onclick="withdraw()">Withdraw</button>
+            <div class="message" id="accountMessage"></div>
+        </div>
+    </div>
+    <script>
+        async function deposit() {
+            const amount = document.getElementById('depositAmount').value;
+            const response = await fetch('/api/betting/deposit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(parseFloat(amount))
+            });
+            const message = await response.text();
+            document.getElementById('accountMessage').innerText = message;
+            updateBalance();
+        }
+        async function withdraw() {
+            const amount = document.getElementById('withdrawAmount').value;
+            const response = await fetch('/api/betting/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(parseFloat(amount))
+            });
+            const message = await response.text();
+            document.getElementById('accountMessage').innerText = message;
+            updateBalance();
+        }
+        async function placeBet() {
+            const amount = document.getElementById('betAmount').value;
+            const response = await fetch('/api/betting/bet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(parseFloat(amount))
+            });
+            const message = await response.text();
+            document.getElementById('betMessage').innerText = message;
+            updateBalance();
+        }
+        async function updateBalance() {
+            const response = await fetch('/api/betting/balance');
+            const balanceMessage = await response.text();
+            document.getElementById('balanceMessage').innerText = balanceMessage;
+        }
+    </script>
+</body>
+</html>

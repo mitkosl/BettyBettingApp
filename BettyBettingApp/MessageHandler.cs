@@ -1,6 +1,6 @@
 ﻿namespace BettyBettingApp;
 
-internal class MessageHandler : IMessageHandler
+public class MessageHandler : IMessageHandler
 {
     public string Read() => Console.ReadLine();
 
