@@ -1,35 +1,42 @@
-# BettyBettingApp
-Betty's Betting App
+# Betty's Betting App
 
+## Overview
+Betty's Betting App is a console application developed in .NET Core that simulates the operations of a player wallet, enhancing the gaming experience for users. The wallet serves as the core component of the application, allowing players to manage their funds effectively while engaging in a simple betting game.
 
-This is a simple beting app for Betty's interview
+## Features
+The application includes the following features:
 
-requitements:
+### 1. Player Balance
+- Players start with a balance of **$0**.
+- After each operation, the updated balance is displayed to the player.
 
-##The problem
-Build a console application in .NET Core which mimics the operations of the player
-wallet that powers our gaming experience.
+### 2. Money Deposit
+- Players can deposit funds into their wallet.
 
-##Requirements
-The wallet is the heart of the gaming experience and as such, it needs to provide the
-following features:
-● In the beginning, the player starts with a balance of $0 and after every
-operation, their new balance is displayed
-● Money deposit - the player must be able to deposit funds
-● Money withdrawal - the player must be able to withdraw funds ● Placing bets &
-accepting wins - the player must be able to play a simple game that simulates a
-real slot game (see game rules below)
-● Game rules - our game of chance provides a simple betting experience with the
-following rules:
-○ The game accepts bets between $1 and $10
-○ The game plays out as follows:
-■ 50% of the bets lose
-■ 40% of the bets win up to x2 the bet amount
-■ 10% of the bets win between x2 and x10 the bet amount
-○ After every round the player balance is calculated as follows:
-{new balance} = {old balance} - {bet amount} + {win amount}
-● The game ends when the player decides to leave
+### 3. Money Withdrawal
+- Players have the ability to withdraw funds from their wallet.
 
-##Important note:
-All operations that require an amount must include the amount as a positive
-number, regardless of the direction of the balance.
+### 4. Placing Bets & Accepting Wins
+- Players can engage in a simple game that simulates a slot game experience.
+
+## Game Rules
+The game operates under the following rules:
+
+- **Betting Range**: Players can place bets ranging from **$1 to $10**.
+- **Outcome Distribution**:
+  - **50%** of the bets result in a loss.
+  - **40%** of the bets result in a win up to **2x** the bet amount.
+  - **10%** of the bets result in a win between **2x** and **10x** the bet amount.
+
+### Balance Calculation
+After each round of betting, the player’s balance is updated according to the following formula:
+- **New Balance** = **Old Balance** - **Bet Amount** + **Win Amount**
+
+### Game Termination
+The game continues until the player decides to exit.
+
+## Important Note
+All operations that involve an amount must specify the amount as a positive number, regardless of whether the operation is a deposit or withdrawal.
+
+## Conclusion
+Betty's Betting App provides an engaging and interactive experience for players, allowing them to manage their funds and enjoy a simple betting game in a user-friendly console application.
