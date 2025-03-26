@@ -9,13 +9,14 @@ public class BettingControllerTests
 {
     private BettingController bettingController;
     private BettingLogicService bettingLogicServiceMock;
+    private IWallet walletMock;
+    private IBettingService bettingServiceMock;
     [SetUp]
     public void SetUp()
     {
-        var walletMock = Substitute.For<IWallet>();
-        walletMock.Balance.Returns(100);
-        var bettingServiceMock = Substitute.For<IBettingService>();
-
+        walletMock = Substitute.For<IWallet>();
+        walletMock.Balance.Returns(100); // Mock initial balance
+        bettingServiceMock = Substitute.For<IBettingService>();
         bettingLogicServiceMock = new BettingLogicService(walletMock, bettingServiceMock);
         bettingController = new BettingController(bettingLogicServiceMock);
     }
@@ -23,37 +24,42 @@ public class BettingControllerTests
     public void Deposit_ValidAmount_ReturnsOkResult()
     {
         decimal amount = 50;
-        bettingLogicServiceMock.Deposit(amount).Returns($"Your current balance is: $100.00");
+        string expectedMessage = $"Your deposit of ${amount:f2} was successful. Your current balance is: $150.00";
 
+        walletMock.When(w => w.Deposit(amount, out Arg.Any<string>()))
+            .Do(callInfo =>
+            {
+                callInfo[1] = expectedMessage;
+            });
         var result = bettingController.Deposit(amount);
-
         if (result is OkObjectResult okResult)
         {
-            Assert.That(okResult.Value, Is.EqualTo($"Deposited $50.00. Your current balance is: $100.00"));
+            Assert.That(okResult.Value, Is.EqualTo(expectedMessage));
         }
     }
-
     [Test]
     public void Withdraw_ValidAmount_ReturnsOkResult()
     {
         decimal amount = 30;
-        bettingLogicServiceMock.Withdraw(amount).Returns($"Your current balance is: $70.00");
+        string expectedMessage = $"Your withdrawal of ${amount:f2} was successful. Your current balance is: $70.00";
 
+        walletMock.When(w => w.Withdraw(amount, out Arg.Any<string>()))
+              .Do(callInfo =>
+              {
+                  callInfo[1] = expectedMessage;
+              });
         var result = bettingController.Withdraw(amount);
-
         if (result is OkObjectResult okResult)
         {
-            Assert.That(okResult.Value, Is.EqualTo($"Withdrew $30.00. Your current balance is: $70.00"));
+            Assert.That(okResult.Value, Is.EqualTo(expectedMessage));
         }
     }
-
     [Test]
     public void GetBalance_ReturnsOkResult()
     {
-        bettingController.Deposit(100);
-
+        // Setting up the mock for the balance message
+        walletMock.GetBalanceMessage().Returns("Your current balance is: $100.00");
         var result = bettingController.GetBalance();
-
         if (result is OkObjectResult okResult)
         {
             Assert.That(okResult.Value, Is.EqualTo("Your current balance is: $100.00"));

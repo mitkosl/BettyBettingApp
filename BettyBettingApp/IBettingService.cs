@@ -2,5 +2,5 @@
 
 public interface IBettingService
 {
-    decimal PlaceBet(decimal betAmount);
+    decimal PlaceBet(decimal betAmount, out string resultMessage);
 }

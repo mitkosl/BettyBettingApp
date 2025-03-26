@@ -3,41 +3,31 @@
 public class Wallet : IWallet
 {
     public decimal Balance { get; private set; }
-    private readonly IMessageHandler messageHandler;
 
-    public Wallet(IMessageHandler messageHandler)
-    {
-        Balance = 0;
-        this.messageHandler = messageHandler;
-    }
-    public void Deposit(decimal amount, bool printOutmessage = false)
+    public Wallet() => Balance = 0;
+    
+    public void Deposit(decimal amount, out string resultMessage)
     {
         if (amount > 0)
         {
             Balance += amount;
-            if (printOutmessage)
-            {
-                messageHandler.Write($"Your deposit of ${amount:f2} was successful. {GetBalanceMessage()}");
-            }
+            resultMessage = $"Your deposit of ${amount:f2} was successful. {GetBalanceMessage()}";
         }
         else
         {
-            messageHandler.Write("Aded amount must be positive.");
+            resultMessage = "Aded amount must be positive.";
         }
     }
-    public void Withdraw(decimal amount, bool printOutmessage = false)
+    public void Withdraw(decimal amount, out string resultMessage)
     {
         if (amount > 0 && amount <= Balance)
         {
             Balance -= amount;
-            if (printOutmessage)
-            {
-                messageHandler.Write($"Your withdrawal of ${amount:f2} was successful. {GetBalanceMessage()}");
-            }
+            resultMessage = $"Your withdrawal of ${amount:f2} was successful. {GetBalanceMessage()}";
         }
         else
         {
-            messageHandler.Write("Invalid withdrawal amount.");
+            resultMessage = "Invalid withdrawal amount.";
         }
     }
 

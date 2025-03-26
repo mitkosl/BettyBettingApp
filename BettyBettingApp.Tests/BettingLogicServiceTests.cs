@@ -21,6 +21,11 @@ public class BettingLogicServiceTests
     {
         decimal amount = 50;
         walletMock.Balance.Returns(0);
+        walletMock.When(w => w.Deposit(amount, out Arg.Any<string>()))
+            .Do(callInfo =>
+            {
+                callInfo[1] = "Deposited $50.00. ";
+            });
 
         var result = bettingLogicService.Deposit(amount);
 
@@ -42,6 +47,11 @@ public class BettingLogicServiceTests
     {
         decimal amount = 30;
         walletMock.Balance.Returns(100);
+        walletMock.When(w => w.Withdraw(amount, out Arg.Any<string>()))
+            .Do(callInfo =>
+            {
+                callInfo[1] = "Withdrew $30.00. ";
+            });
 
         var result = bettingLogicService.Withdraw(amount);
 
@@ -63,11 +73,11 @@ public class BettingLogicServiceTests
     {
         decimal betAmount = 5;
         walletMock.Balance.Returns(100);
-        bettingServiceMock.PlaceBet(betAmount).Returns(10);
+        bettingServiceMock.PlaceBet(betAmount, out var message).Returns(10);
 
         var result = bettingLogicService.PlaceBet(betAmount);
 
-        Assert.That(result, Is.EqualTo($"Bet placed: $5.00. Win amount: $10.00. "));
+        Assert.That(result, Is.EqualTo(message));
     }
 
     [Test]
@@ -84,6 +94,7 @@ public class BettingLogicServiceTests
     public void GetBalance_ReturnsCurrentBalance()
     {
         walletMock.Balance.Returns(100);
+        walletMock.GetBalanceMessage().Returns("Your current balance is: $100.00");
 
         var result = bettingLogicService.GetBalance();
 

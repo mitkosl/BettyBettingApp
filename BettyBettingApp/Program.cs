@@ -40,7 +40,8 @@ internal static class Program
                 case "deposit":
                     if (amount > 0)
                     {
-                        wallet.Deposit(amount, true);
+                        wallet.Deposit(amount, out var message);
+                        messageHandler.Write(message);
                     }
                     else
                     {
@@ -50,7 +51,8 @@ internal static class Program
                 case "withdraw":
                     if (amount > 0)
                     {
-                        wallet.Withdraw(amount, true);
+                        wallet.Withdraw(amount, out var message);
+                        messageHandler.Write(message);
                     }
                     else
                     {
@@ -60,7 +62,8 @@ internal static class Program
                 case "bet":
                     if (amount >= 1 && amount <= 10)
                     {
-                        bettingService!.PlaceBet(amount);
+                        bettingService!.PlaceBet(amount, out var message);
+                        messageHandler.Write(message);
                     }
                     else
                     {

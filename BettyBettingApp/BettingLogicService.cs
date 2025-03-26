@@ -16,8 +16,8 @@ public class BettingLogicService
         {
             return "Deposit amount must be positive.";
         }
-        wallet.Deposit(amount, true);
-        return $"Deposited ${amount:f2}. {wallet.GetBalanceMessage()}";
+        wallet.Deposit(amount, out var message);
+        return message;
     }
 
     public string Withdraw(decimal amount)
@@ -26,8 +26,8 @@ public class BettingLogicService
         {
             return "Withdrawal amount must be positive.";
         }
-        wallet.Withdraw(amount, true);
-        return $"Withdrew ${amount:f2}. {wallet.GetBalanceMessage()}";
+        wallet.Withdraw(amount, out var message);
+        return message;
     }
 
     public string PlaceBet(decimal betAmount)
@@ -36,11 +36,11 @@ public class BettingLogicService
         {
             return "Bet must be between $1 and $10.";
         }
-        var winAmount = bettingService.PlaceBet(betAmount);
-        return $"Bet placed: ${betAmount:f2}. Win amount: ${winAmount:f2}. {wallet.GetBalanceMessage()}";
+        bettingService.PlaceBet(betAmount, out var message);
+        return message;
     }
     public string GetBalance()
     {
-        return $"Your current balance is: ${wallet.Balance:f2}";
+        return wallet.GetBalanceMessage();
     }
 }
